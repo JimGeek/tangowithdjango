@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+	<p>Hello from index.html <b>{{ boldmessage }}</b></p>
+	<img src="{% static "image/rango.jpg" %}">
+{% endblock content %}

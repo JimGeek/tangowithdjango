@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title> Rango </title>
+</head>
+<body>
+	<h1>{{ category_name }}</h1>
+	{% if category %}
+		{% if pages %}
+			<ul>
+				{% for page in pages %}
+					<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p>No page exists in the category</p>
+		{% endif %}
+	{% else %}
+			<p>No specified {{ category_name }} exists</p>
+	{% endif %}
+	<a href="/category/{{ category_name_url }}/add_page/">Add page to {{ category_name }}</a>
+</body>
+</html>

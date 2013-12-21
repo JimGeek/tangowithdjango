@@ -2,6 +2,33 @@
 {% load static %}
 
 {% block content %}
-	<p>Hello from index.html <b>{{ boldmessage }}</b></p>
-	<img src="{% static "image/rango.jpg" %}">
+	<p>Hello from Rango <b>{{ user.username }}</b></p>
+	{% if categories %}
+		<div>
+		<ul>
+			{% for category in categories %}
+					<li><a href="/category/{{ category.url }}">{{ category.name }}</a></li>
+			{% endfor %}
+		</ul>
+		</div>
+		<div>
+		<ul>
+			{% for page in pages %}
+				<li><a href="{{ page.url }}">{{ page.title }}</a></li>
+			{% endfor %}
+		</ul>
+		{% if user.is_authenticated %}
+			<a href="/add_category/">Add new category</a>
+			<br/>
+			<a href="/logout/">Logout</a>
+		{% else %}
+			<a href="/register/">Register</a>
+			<br/>
+			<a href="/login/">Login</a>
+		{% endif %}
+		
+		</div>	
+	{% else %}
+		<p> There are no category to display </p>
+	{% endif %}
 {% endblock content %}

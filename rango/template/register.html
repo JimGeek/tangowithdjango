@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>Register</title>
+</head>
+<body>
+	<h1>Register with Rango</h1>
+	{% if registered %}
+		<p>Already registered Please return to <a href="/">Homepage</a>.</p>
+	{% else %}
+		<p>Rango : Register here</p>
+		<form id="user_form" method="POST" action="/register/" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ user_form.as_p }}
+			{{ profile_form.as_p }}
+
+			<input type="submit" name="submit">
+		</form>
+	{% endif %}
+</body>
+</html>

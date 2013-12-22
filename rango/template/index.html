@@ -2,16 +2,22 @@
 {% load static %}
 
 {% block content %}
-	<p>Hello from Rango <b>{{ user.username }}</b></p>
+	<div class="hero-unit">
+    	<h1>Ready to Rango</h1>
+    	<p>Find, Add, Share and Rango useful links and resources.</p>
+    </div>
+    
+	<div class="row-fluid">
+    	<div class="span6">
 	{% if categories %}
-		<div>
 		<ul>
 			{% for category in categories %}
 					<li><a href="/category/{{ category.url }}">{{ category.name }}</a></li>
 			{% endfor %}
 		</ul>
-		</div>
-		<div>
+	</div>
+    <!--/span-->
+    <div class="span6">
 		<ul>
 			{% for page in pages %}
 				<li><a href="{{ page.url }}">{{ page.title }}</a></li>
@@ -26,8 +32,9 @@
 			<br/>
 			<a href="/login/">Login</a>
 		{% endif %}
-		
-		</div>	
+		</div>
+    <!--/span-->
+	</div>
 	{% else %}
 		<p> There are no category to display </p>
 	{% endif %}

@@ -5,28 +5,53 @@ from django.shortcuts import render, render_to_response
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserProfileForm, ProfileForm
 from django.contrib.auth import authenticate,login,logout
+from datetime import datetime
 
 def index(request):
 	user = request.user
-	print user.username
-	template = loader.get_template('index.html')
+	context = RequestContext(request)
 	cat_list = Category.objects.order_by('id')[:6]
 	for category in cat_list:
 		category.url = category.name.replace(' ','_')
 	pages = Page.objects.order_by('-views')[:5]
-	context = Context({'pages':pages,'categories':cat_list,'user':user},)
-	response = template.render(context)
+	# response = render_to_response('index.html', {'pages':pages,'categories':cat_list,'user':user}, context)
 
-	visits = int(request.COOKIES.get('visits','0'))
+	# visits = int(request.COOKIES.get('visits','0'))
 
-	if request.COOKIES.has_key('last_visit'):
-		last_visit = request.COOKIES['last_visit']
+	# if request.COOKIES.has_key('last_visit'):
+	# 	last_visit = request.COOKIES['last_visit']
+	# 	print last_visit
+	# 	# print datetime.strptime(last_visit[:7],"%Y-%m-%d %H:%M:%S")
+	# 	last_visit_time = datetime.strptime(last_visit[:19],"%Y-%m-%d %H:%M:%S")
+	# 	if (datetime.now() - last_visit_time).total_seconds() > 60 :
+	# 		response.set_cookie('visits',visits+1)
+	# 		response.set_cookie('last_visit',datetime.now())
+	# else:
+	# 	response.set_cookie('last_visit',datetime.now())
 		
-	return HttpResponse(response)
+	# return response
+	if request.session.get('last_visit'):
+		last_visit_time = request.session.get('last_visit')
+		visits = request.session.get('visits',0)
+
+		if (datetime.now() - datetime.strptime(last_visit_time[:19],"%Y-%m-%d %H:%M:%S")).total_seconds() > 60:
+			request.session['visits'] = visits+1
+			request.session['last_visit'] = str(datetime.now())
+	else:
+		request.session['last_visit'] = str(datetime.now())
+		request.session['visits'] = 1
+
+
+	return render_to_response('index.html', {'pages':pages,'categories':cat_list,'user':user}, context)
 
 def about(request):
-	template = loader.get_template('index.html')
-	context = Context({'boldmessage':"I am a bold guy"},)
+
+	if request.session.get('visits'):
+		visits = request.session.get('visits')
+	else:
+		visits = 0
+	template = loader.get_template('about.html')
+	context = Context({'boldmessage':"I am a bold guy",'visits':visits},)
 	response = template.render(context)
 	return HttpResponse(response)
 
